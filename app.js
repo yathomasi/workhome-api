@@ -18,10 +18,12 @@ db.on('error', (error) => console.error(error));
 db.once('open', () => {
   console.log("we're connected!");
 });
-
+const testRouter = require("./routes/test")
+const indexRouter = require("./routes/index")
 
 app.use(express.json());
-
+app.use('/',indexRouter)
+app.use('/test',testRouter)
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
