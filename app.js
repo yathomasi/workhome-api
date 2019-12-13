@@ -20,10 +20,12 @@ db.once('open', () => {
 });
 const testRouter = require("./routes/test")
 const indexRouter = require("./routes/index")
+const userRouter = require("./routes/user")
 
 app.use(express.json());
 app.use('/',indexRouter)
 app.use('/test',testRouter)
+app.use('/user',userRouter)
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
