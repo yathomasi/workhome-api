@@ -1,7 +1,11 @@
 const mongoose = require('mongoose')
 const uniqueValidator = require('mongoose-unique-validator')
 const bcrypt = require('bcryptjs')
-let SALT = 14
+const jwt = require('jsonwebtoken')
+require("dotenv").config();
+
+const SECRET = process.env.JWT_KEY
+const SALT = 14
 
 const userSchema = new mongoose.Schema({
     username: {
@@ -70,6 +74,19 @@ userSchema.methods.comparePassword = function (pass, checkpass) {
         }
         return checkpass(null, isMatch)
     })
+}
+
+userSchema.methods.generateAuthToken = (user) => {
+    payload ={
+        id:user.id,
+        isAdmin:user.isAdmin
+    };
+    // console.log(payload);
+    options = {
+        issuer:"workhome",
+        expiresIn:"1d"
+    }
+    return jwt.sign(payload, SECRET, options);
 }
 
 module.exports = mongoose.model('User', userSchema)
