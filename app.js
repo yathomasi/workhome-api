@@ -12,26 +12,28 @@ if (process.env.NODE_ENV == 'development') {
   console.log("Development mode on");
 }
 mongoose.connect(
-  process.env.MONGODB_URL, {
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
-    useCreateIndex: true
-  }
-);
-const db = mongoose.connection;
-db.on('error', (error) => console.error(error));
-db.once('open', () => {
-  console.log("we're connected!");
-});
+    process.env.MONGODB_URL, {
+      useUnifiedTopology: true,
+      useNewUrlParser: true,
+      useCreateIndex: true
+    }
+  ).then(() => console.log("Connected to MongoDB..."))
+  .catch((err) => {
+    console.error("Could not connect to MongoDB...")
+    // console.error(err)
+  });
+
 const testRouter = require("./routes/test")
 const indexRouter = require("./routes/index")
 const userRouter = require("./routes/user")
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use('/',indexRouter)
-app.use('/test',testRouter)
-app.use('/user',userRouter)
+app.use(express.urlencoded({
+  extended: true
+}));
+app.use('/', indexRouter)
+app.use('/test', testRouter)
+app.use('/user', userRouter)
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
