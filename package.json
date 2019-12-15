@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A work log for everyone.",
   "main": "app.js",
-  "repository": "https://github.com/yathomasi/workhome",
+  "repository": "https://github.com/yathomasi/workhome-api",
   "author": "Thomas Kunwar",
   "license": "MIT",
   "scripts": {
