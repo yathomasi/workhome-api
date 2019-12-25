@@ -11,9 +11,12 @@ const SECRET = process.env.JWT_KEY
 router.get('/', auth, (req, res) => {
     // console.log(req.decoded)
     const payload = req.decoded;
-    if (payload && payload.isAdmin == true) {
-        const users = User.find()
-        return res.json(users)
+    if (payload && payload.isAdmin === true) {
+        User.find({},(err,users)=>{
+            if (err) return res.status(400)
+            return res.status(200).json(users)
+        }).lean()
+        
     } else {
         return res.status(500).json({
             message: err.message
@@ -45,7 +48,7 @@ router.post('/register', (req, res) => {
 
     }, (err, user) => {
         if (err) {
-            return res.status(500).json({
+            return res.status(401).json({
                 message: err.message
             })
         }
@@ -53,7 +56,8 @@ router.post('/register', (req, res) => {
         return res.status(200).header("x-access-token", token).json({
             id: user._id,
             auth: true,
-            token: token
+            token: token,
+            isAdmin: user.isAdmin
         })
     })
 });
@@ -85,9 +89,11 @@ router.post('/login', (req, res, next) => {
             }
             const token = user.generateAuthToken(user);
             // console.log("token: ", token)
-            return res.status(200).send({
+            return res.status(200).header("x-access-token", token).send({
+                id: user._id,
                 auth: true,
                 token: token,
+                isAdmin: user.isAdmin
             });
         });
 
